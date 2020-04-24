@@ -100,4 +100,6 @@ h2 {
   background-color: #004085;
   padding: 1rem;
   color:white;
+  border: 1px solid transparent;
+  border-radius: .35rem;
 }

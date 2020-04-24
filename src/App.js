@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Pregunta from "./components/Pregunta";
 import Formulario from "./components/Formulario";
+import Listado from "./components/Listado";
+import ControlPresupuesto from "./components/ControlPresupuesto";
 
 
 function App() {
@@ -9,17 +11,29 @@ function App() {
     const [restante, guardarRestante] = useState(0);
     const [mostrarPregunta, actualizarPregunta] = useState(true);
     const [gastos, guardarGastos] = useState([]);
+    const [gasto, guardarGasto] = useState({});
+    const [crearGasto, guardarCrearGasto] = useState(false)
+
+    //UseEffect que actualice el restante
+    useEffect(() => {
+        //Agrega el nuevo presupuesto
+        if (crearGasto) {
+            guardarGastos([
+                ...gastos,
+                gasto
+            ])
 
 
-    //Cuando agreguemos un nuevo gasto
-    const agregarNuevoGasto = gasto => {
-        guardarGastos([
-            ...gastos,
-            gasto
-        ])
-    }
+            //Resta del presupuesto actual
+            const presupuestoRestante = restante - gasto.cantidad;
+            guardarRestante(presupuestoRestante)
 
-    console.log(gastos)
+            //Resetear a false
+            guardarCrearGasto(false)
+        }
+
+    }, [gasto, crearGasto, gastos, restante])
+
 
     return (
         <div className="container">
@@ -36,11 +50,18 @@ function App() {
                         <div className="row">
                             <div className="one-half column">
                                 <Formulario
-                                    agregarNuevoGasto={agregarNuevoGasto}
+                                    guardarGasto={guardarGasto}
+                                    guardarCrearGasto={guardarCrearGasto}
                                 />
                             </div>
                             <div className="one-half column">
-                                2
+                                <Listado
+                                    gastos={gastos}
+                                />
+                                <ControlPresupuesto
+                                    presupuesto={presupuesto}
+                                    restante={restante}
+                                />
                             </div>
                         </div>}
                 </div>
